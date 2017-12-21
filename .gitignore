@@ -1,0 +1,8 @@
+.idea/
+/dist/*
+!/dist/favicon.ico
+!/dist/icon.png
+!/dist/robots.txt
+!/dist/site.webmanifest
+node_modules/
+*.log
