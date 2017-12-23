@@ -1,42 +1,60 @@
-$color-global-bg: #F0F0F0;
-$color-scale-bg: #CCCCCC;
-$color-slice-used: #4781F0;
-$color-slice-unused: #DEDEDE;
-$color-slice-shadow: #CCCCCC;
+@import '../common';
+
+$date-width: 4em;
+$slice-margin: 0.15em;
 
 .table {
-  margin: 2em;
-  background-color: $color-global-bg;
+  padding: 1em;
 
   .scale {
     height: 2em;
-    margin-bottom: 1em;
+    margin-left: $date-width + $slice-margin;
     background-color: $color-scale-bg;
   }
 
   .body {
-    ;
+    display: table;
+    width: 100%;
+    border-spacing: 0 1em;
+    table-layout: fixed;
 
     .day {
-      height: 2em;
-      margin: 1em 0;
+      display: table-row;
+      height: 3em;
+      font-family: monospace;
+
+      .date {
+        position: relative;
+        display: table-cell;
+        width: $date-width;
+
+        .year {
+          position: absolute;
+          bottom: 2.3em;
+          font-size: 0.75em;
+          color: $color-text-p5;
+        }
+
+        .monthDay {
+          position: absolute;
+          bottom: 0.3em;
+          color: $color-text-p3;
+        }
+      }
 
       .slice {
-        display: inline-block;
-        width: 3%;
-        height: 2em;
-        margin: 0 0.583333333%;
+        display: table-cell;
+        border-left: $slice-margin solid $color-frame-bg;
         background-color: $color-slice-unused;
-        box-shadow: 0.25em 0.25em $color-slice-shadow;
       }
       .slice:hover {
-        background-color: $color-slice-unused * 1.05;
+        background-color: $color-slice-unused-highlight;
       }
       .slice.used {
         background-color: $color-slice-used;
       }
       .slice.used:hover {
-        background-color: $color-slice-used * 1.2;
+        background-color: $color-slice-used-highlight;
       }
     }
   }

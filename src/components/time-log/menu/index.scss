@@ -1,13 +1,12 @@
-$color-menu-bg: #353535;
-$color-menu-bg-highlighted: #4A4A4A;
-$color-menu-fg: #AEAEAE;
-$color-menu-fg-highlighted: #FFFFFF;
+@import '../common';
+
+$menu-padding-horizontal: 0.5em;
 
 .menu {
   position: absolute;
-  width: 10em;
+  width: $menu-width - $menu-padding-horizontal * 2;
   height: 100%;
-  padding: 0.5em;
+  padding: 0.5em $menu-padding-horizontal;
   overflow: hidden;
   color: $color-menu-fg;
   background-color: $color-menu-bg;
