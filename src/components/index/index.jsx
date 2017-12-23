@@ -3,7 +3,7 @@ import 'babel-polyfill';
 import React, {Component} from 'react';
 import {render} from 'react-dom';
 
-import {TimeManager} from 'src/components/time-manager/index.jsx';
+import {TimeLog} from 'src/components/time-log/index.jsx';
 
 import styles from './index.scss';
 
@@ -31,7 +31,7 @@ class Main extends Component {
   render() {
     return (
         <div className={styles.main}>
-          <TimeManager />
+          <TimeLog title={transData.title} />
           <div className={styles.credit}>
             Copyright (c) 2017 <a href="mailto:fenghou1st@gmail.com">Fenghou</a>
           </div>

@@ -1,3 +1,3 @@
-# Time manager
+# Time log
 
-A tool for time management.
+A tool for time logging.

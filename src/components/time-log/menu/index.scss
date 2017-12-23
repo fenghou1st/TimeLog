@@ -1,0 +1,62 @@
+$color-menu-bg: #353535;
+$color-menu-bg-highlighted: #4A4A4A;
+$color-menu-fg: #AEAEAE;
+$color-menu-fg-highlighted: #FFFFFF;
+
+.menu {
+  position: absolute;
+  width: 10em;
+  height: 100%;
+  padding: 0.5em;
+  overflow: hidden;
+  color: $color-menu-fg;
+  background-color: $color-menu-bg;
+
+  .logo {
+    height: 4em;
+    line-height: 4em;
+    cursor: pointer;
+
+    img {
+      width: 2em;
+      height: 2em;
+      vertical-align: middle;
+    }
+
+    .title {
+      margin-left: 0.5em;
+      font-size: 1.2em;
+      font-weight: bold;
+      font-family: monospace;
+      vertical-align: middle;
+    }
+  }
+
+  .item {
+    height: 2.5em;
+    line-height: 2.5em;
+    margin: 0.25em 0;
+    padding: 0 0.5em;
+    border-radius: 0.5em;
+    font-size: 0.9375em;
+    cursor: pointer;
+
+    .icon {
+      width: 1em;
+      font-size: 1.333333333em;
+      vertical-align: middle;
+    }
+
+    .name {
+      margin-left: 1em;
+      vertical-align: middle;
+    }
+  }
+  .item:hover {
+    color: $color-menu-fg-highlighted;
+  }
+  .item.selected {
+    color: $color-menu-fg-highlighted;
+    background-color: $color-menu-bg-highlighted;
+  }
+}
