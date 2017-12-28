@@ -17,6 +17,7 @@ $color-slice-used: #4781F0;
 $color-slice-used-highlight: $color-slice-used * 1.2;
 $color-slice-unused: #DEDEDE;
 $color-slice-unused-highlight: $color-slice-unused * 1.05;
-$color-slice-shadow: #CCCCCC;
+$color-slice-selecting: ($color-scale-bg + $color-slice-used) / 2;
+$color-slice-selected: $color-slice-selecting;
 
 $menu-width: 11em;

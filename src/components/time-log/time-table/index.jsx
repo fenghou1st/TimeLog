@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {SelectableGroup} from 'react-selectable-fast';
 
 import {Body} from './body.jsx';
 import {Scale} from './scale.jsx';
@@ -43,6 +44,8 @@ class TimeTable extends Component {
         },
       ],
     };
+
+    this.onSelectionFinish = this.onSelectionFinish.bind(this);
   }
 
   /**
@@ -50,12 +53,27 @@ class TimeTable extends Component {
    */
   render() {
     return (
-        <div className={styles.table}>
-          <Scale />
-          <Body tasks={this.state.tasks} />
-          <Scale />
-        </div>
+        <SelectableGroup
+            className={styles.table}
+            enableDeselect
+            onSelectionFinish={this.onSelectionFinish}
+        >
+          <Scale/>
+          <Body tasks={this.state.tasks}/>
+          <Scale/>
+        </SelectableGroup>
     );
+  }
+
+  /**
+   * @param {Array.<SelectableItem>} selectedItems
+   */
+  onSelectionFinish(selectedItems) {
+    // TODO: get date & time
+    console.log(selectedItems);
+    // TODO: log duration
+
+    // TODO: 显示所选时间段，并出现一行文本框，提示填写任务名，填写任务名之后继续显式其他填写项
   }
 }
 

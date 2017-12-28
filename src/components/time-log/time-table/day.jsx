@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
+import Slice from './slice.jsx';
 import styles from './index.scss';
-
-const boundClassNames = classNames.bind(styles);
 
 /**
  * Content row of the time table
@@ -24,25 +22,23 @@ class Day extends Component {
   render() {
     const date = moment(this.props.date);
 
-    const slices = [];
-    for (let i = 0; i < this.props.slices.length; ++i) {
-      const classNames = boundClassNames('slice', {
-        used: this.props.slices[i] !== null,
-      });
-      slices.push(<span key={i} className={classNames} />);
-    }
-
     return (
         <div className={styles.day}>
           <span className={styles.date}>
             <div className={styles.year}>{date.format('YYYY')}</div>
             <div className={styles.monthDay}>{date.format('MM-DD')}</div>
           </span>
-          {slices}
+          {this.props.slices.map((taskId, i) => (
+              <Slice key={i}
+                     date={this.props.date}
+                     id={i}
+                     used={taskId !== null}/>
+          ))}
         </div>
     );
   }
 }
+
 Day.propTypes = {
   date: PropTypes.instanceOf(Date),
   begin: PropTypes.number.isRequired,

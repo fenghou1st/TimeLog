@@ -13,7 +13,8 @@
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-fontawesome": "^1.6.1"
+    "react-fontawesome": "^1.6.1",
+    "react-selectable-fast": "^2.0.8"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.6",

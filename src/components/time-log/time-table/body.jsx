@@ -29,11 +29,11 @@ class Body extends Component {
     this.dayList = this._getDayList(this.state.tasks);
 
     const days = this.dayList.map((day) =>
-      <Day key={day.date}
-           date={day.date}
-           begin={day.begin}
-           end={day.end}
-           slices={day.slices} />
+        <Day key={day.date}
+             date={day.date}
+             begin={day.begin}
+             end={day.end}
+             slices={day.slices}/>,
     );
 
     return (
@@ -76,6 +76,7 @@ class Body extends Component {
     ];
   }
 }
+
 Body.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.shape({
     begin: PropTypes.number.isRequired,

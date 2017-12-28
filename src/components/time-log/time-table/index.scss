@@ -56,6 +56,22 @@ $slice-margin: 0.15em;
       .slice.used:hover {
         background-color: $color-slice-used-highlight;
       }
+      .slice.selected {
+        background-color: $color-slice-selected;
+      }
+      .slice.selecting {
+        background-color: $color-slice-selecting;
+      }
     }
+  }
+}
+
+:global {
+  .selectable-selectbox {
+    z-index: 9000;
+    position: absolute;
+    cursor: default;
+    background: none;
+    border: 1px dashed grey;
   }
 }
