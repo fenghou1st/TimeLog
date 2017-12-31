@@ -28,11 +28,12 @@ class Day extends Component {
             <div className={styles.year}>{date.format('YYYY')}</div>
             <div className={styles.monthDay}>{date.format('MM-DD')}</div>
           </span>
-          {this.props.slices.map((taskId, i) => (
+          {this.props.slices.map(({taskId, styleId}, i) => (
               <Slice key={i}
                      date={this.props.date}
                      id={i}
-                     used={taskId !== null}/>
+                     taskId={taskId}
+                     styleId={styleId}/>
           ))}
         </div>
     );
@@ -43,7 +44,7 @@ Day.propTypes = {
   date: PropTypes.instanceOf(Date),
   begin: PropTypes.number.isRequired,
   end: PropTypes.number.isRequired,
-  slices: PropTypes.arrayOf(PropTypes.number).isRequired,
+  slices: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export {Day};

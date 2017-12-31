@@ -51,8 +51,15 @@ class Body extends Component {
    * @private
    */
   _getDayList(tasks) {
-    const slices = new Array(6 * 24); // 10 minutes per slice
-    slices.fill(null); // taskId
+    /** @type {number} */
+    const slicesPerHour = this.props.configs.slice.slicesPerHour;
+    const slicesPerDay = slicesPerHour * 24;
+    const slices = new Array(slicesPerDay);
+    for (let i = 0; i < slicesPerDay; ++i) {
+      const taskId = i % slicesPerDay < 21 ? i : null;
+      const styleId = taskId !== null ? taskId % 21 : null;
+      slices[i] = {taskId, styleId};
+    }
 
     return [
       {
@@ -85,6 +92,7 @@ Body.propTypes = {
     project: PropTypes.string.isRequired,
     tags: PropTypes.arrayOf(PropTypes.string).isRequired,
   })).isRequired,
+  configs: PropTypes.object.isRequired,
 };
 
 export {Body};

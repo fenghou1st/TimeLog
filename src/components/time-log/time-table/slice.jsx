@@ -7,12 +7,13 @@ import styles from './index.scss';
 
 const boundClassNames = classNames.bind(styles);
 
-const Slice = ({selectableRef, selected, selecting, used}) => (
+const Slice = ({selectableRef, selected, selecting, taskId, styleId}) => (
     <span ref={selectableRef}
           className={boundClassNames('slice', {
             selected: selected,
             selecting: selecting,
-            used: used,
+            ['not-selectable']: taskId !== null,
+            [`task${styleId}`]: styleId !== null,
           })}
     />
 );
@@ -22,7 +23,8 @@ Slice.propTypes = {
   selecting: PropTypes.bool.isRequired,
   date: PropTypes.instanceOf(Date),
   id: PropTypes.number.isRequired,
-  used: PropTypes.bool.isRequired,
+  taskId: PropTypes.number,
+  styleId: PropTypes.number,
 };
 
 export default createSelectable(Slice);

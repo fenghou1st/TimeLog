@@ -1,0 +1,8 @@
+timeLog:
+  timeTable:
+    slice:
+      slicesPerHour: 6
+    scale:
+      longScalesPerDay: 24
+      mediumScalesPerLongScale: 2
+      shortScalesPerLongScale: 6
