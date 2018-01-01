@@ -1,0 +1,31 @@
+@import './index';
+
+.scale {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  .scaleRow {
+    display: table-row;
+    height: 0.7em;
+
+    .datePlaceholder {
+      display: table-cell;
+      width: $date-width;
+      padding: 0;
+    }
+
+    .scaleElement {
+      display: table-cell;
+      border-left: 1px solid $color-scale-scale;
+      font-size: 0.875em;
+      color: $color-scale-fg;
+      background-color: $color-scale-bg;
+    }
+    // remove the left border of the first scale element
+    .scaleElement:nth-child(2) {
+      border-left: none;
+    }
+  }
+}

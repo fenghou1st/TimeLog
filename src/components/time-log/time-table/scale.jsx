@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import styles from './index.scss';
+import styles from './scale.scss';
 import PropTypes from 'prop-types';
 
 /**

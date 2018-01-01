@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {Day} from './day.jsx';
-import styles from './index.scss';
+import styles from './body.scss';
 
 /**
  * Body of the time table
@@ -33,7 +33,10 @@ class Body extends Component {
              date={day.date}
              begin={day.begin}
              end={day.end}
-             slices={day.slices}/>,
+             slices={day.slices}
+             onDayHover={this.props.onDayHover}
+             onSliceHover={this.props.onSliceHover}
+        />,
     );
 
     return (
@@ -55,9 +58,16 @@ class Body extends Component {
     const slicesPerHour = this.props.configs.slice.slicesPerHour;
     const slicesPerDay = slicesPerHour * 24;
     const slices = new Array(slicesPerDay);
+    const numTasks = 3;
+    const numTasksPlusNullTask = numTasks + 1;
+    const numStyles = 21;
     for (let i = 0; i < slicesPerDay; ++i) {
-      const taskId = i % slicesPerDay < 21 ? i : null;
-      const styleId = taskId !== null ? taskId % 21 : null;
+      let taskId = Math.floor(i / slicesPerDay * numTasksPlusNullTask);
+      if (taskId >= numTasks) {
+        taskId = null;
+      }
+      const styleId = taskId !== null ?
+          taskId * numStyles / numTasks % numStyles : null;
       slices[i] = {taskId, styleId};
     }
 
@@ -93,6 +103,8 @@ Body.propTypes = {
     tags: PropTypes.arrayOf(PropTypes.string).isRequired,
   })).isRequired,
   configs: PropTypes.object.isRequired,
+  onDayHover: PropTypes.func.isRequired,
+  onSliceHover: PropTypes.func.isRequired,
 };
 
 export {Body};

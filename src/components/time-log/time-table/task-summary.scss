@@ -1,0 +1,30 @@
+@import './index';
+
+.summary {
+  height: 3em;
+  line-height: 3em;
+
+  .time {
+    display: inline-block;
+
+    .timeBegin {
+      display: inline-block;
+    }
+
+    .timeSeparator {
+      display: inline-block;
+    }
+
+    .timeEnd {
+      display: inline-block;
+    }
+  }
+
+  .name {
+    display: inline-block;
+  }
+
+  .project {
+    display: inline-block;
+  }
+}
