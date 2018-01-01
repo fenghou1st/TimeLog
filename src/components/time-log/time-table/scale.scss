@@ -5,6 +5,7 @@
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  box-shadow: 0.1em 0.1em $color-frame-shadow;
 
   .scaleRow {
     display: table-row;
@@ -14,6 +15,7 @@
       display: table-cell;
       width: $date-width;
       padding: 0;
+      background-color: $color-scale-bg;
     }
 
     .scaleElement {
@@ -22,10 +24,6 @@
       font-size: 0.875em;
       color: $color-scale-fg;
       background-color: $color-scale-bg;
-    }
-    // remove the left border of the first scale element
-    .scaleElement:nth-child(2) {
-      border-left: none;
     }
   }
 }
