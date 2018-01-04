@@ -23,8 +23,7 @@ class TimeTable extends Component {
     this.state = {
       tasks: this.getTasks(),
       hovered: {
-        date: null,
-        sliceId: null,
+        begin: null,
         taskId: null,
       },
     };
@@ -33,8 +32,8 @@ class TimeTable extends Component {
     this.configs = loadConfig().timeLog.timeTable;
 
     this.onSelectionFinish = this.onSelectionFinish.bind(this);
-    this.onDayHover = this.onDayHover.bind(this);
-    this.onSliceHover = this.onSliceHover.bind(this);
+    this.onSliceEnter = this.onSliceEnter.bind(this);
+    this.onSliceLeave = this.onSliceLeave.bind(this);
   }
 
   /**
@@ -54,8 +53,8 @@ class TimeTable extends Component {
           <Scale position='top' configs={this.configs}/>
           <Body tasks={this.state.tasks}
                 configs={this.configs}
-                onDayHover={this.onDayHover}
-                onSliceHover={this.onSliceHover}
+                onSliceEnter={this.onSliceEnter}
+                onSliceLeave={this.onSliceLeave}
           />
           <Scale position='bottom' configs={this.configs}/>
           <TaskSummary task={currTask}/>
@@ -107,40 +106,44 @@ class TimeTable extends Component {
     // TODO: 显示所选时间段，并出现一行文本框，提示填写任务名，填写任务名之后继续显示其他填写项
   }
 
-  /**
-   * @param {?Date} date
-   */
-  onDayHover(date) {
-    if (this.state.hovered.date === date) {
-      return;
-    }
-    this.setState({
-      hovered: {
-        date: date,
-        sliceId: null,
-        taskId: null,
-      },
-    });
-  }
+  // /**
+  //  * @param {?Date} date
+  //  */
+  // onDayHover(date) {
+  //   if (this.state.hovered.date === date) {
+  //     return;
+  //   }
+  //   this.setState({
+  //     hovered: {
+  //       date: date,
+  //       sliceId: null,
+  //       taskId: null,
+  //     },
+  //   });
+  // }
 
   /**
-   * @param {Date} date
-   * @param {?number} sliceId
+   * @param {number} begin
    * @param {?number} taskId
    */
-  onSliceHover(date, sliceId, taskId) {
-    if (this.state.hovered.date === date &&
-        this.state.hovered.sliceId === sliceId &&
+  onSliceEnter(begin, taskId) {
+    if (this.state.hovered.begin === begin &&
         this.state.hovered.taskId === taskId) {
       return;
     }
     this.setState({
       hovered: {
-        date: date,
-        sliceId: sliceId,
+        begin: begin,
         taskId: taskId,
       },
     });
+  }
+
+  /**
+   * @param {number} begin
+   * @param {?number} taskId
+   */
+  onSliceLeave(begin, taskId) {
   }
 }
 

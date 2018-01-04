@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
-import {Day} from './day.jsx';
+import Slice from './slice.jsx';
 import styles from './body.scss';
 
 /**
@@ -17,80 +18,110 @@ class Body extends Component {
     this.state = {
       tasks: this.props.tasks,
     };
-
-    /** @type {Array.<Object>} */
-    this.dayList = null;
   }
 
   /**
    * @return {*}
    */
   render() {
-    this.dayList = this._getDayList(this.state.tasks);
+    const {dates, slices} = this._getDatesAndSlices(this.state.tasks);
 
-    const days = this.dayList.map((day) =>
-        <Day key={day.date}
-             date={day.date}
-             begin={day.begin}
-             end={day.end}
-             slices={day.slices}
-             onDayHover={this.props.onDayHover}
-             onSliceHover={this.props.onSliceHover}
-        />,
-    );
+    const dateComponents = dates.map((date) => {
+      const day = moment(date);
+      return (
+          <span key={date.valueOf()} className={styles.date}>
+            <div className={styles.year}>{day.format('YYYY')}</div>
+            <div className={styles.monthDay}>{day.format('MM-DD')}</div>
+          </span>
+      );
+    });
+
+    const sliceComponents = slices.map(({begin, taskId, styleId}) => (
+        <Slice key={begin}
+               begin={begin}
+               taskId={taskId}
+               styleId={styleId}
+               onSliceEnter={this.props.onSliceEnter}
+               onSliceLeave={this.props.onSliceLeave}
+        />
+    ));
 
     return (
         <div className={styles.body}>
-          {days}
+          <div className={styles.dates}>
+            {dateComponents}
+          </div>
+          <div className={styles.slices}>
+            {sliceComponents}
+          </div>
         </div>
     );
   }
 
   /**
    * TODO: implement
-   * Get day list and each day's slice-task map
+   * Get day list and each day's slices
    * @param {Array.<Object>} tasks
-   * @return {Array.<Object>}
+   * @return {{dates: Array.<Date>, slices: Array.<Object>}}
    * @private
    */
-  _getDayList(tasks) {
-    /** @type {number} */
-    const slicesPerHour = this.props.configs.slice.slicesPerHour;
-    const slicesPerDay = slicesPerHour * 24;
-    const slices = new Array(slicesPerDay);
-    const numTasks = 3;
-    const numTasksPlusNullTask = numTasks + 1;
-    const numStyles = 21;
-    for (let i = 0; i < slicesPerDay; ++i) {
-      let taskId = Math.floor(i / slicesPerDay * numTasksPlusNullTask);
-      if (taskId >= numTasks) {
-        taskId = null;
-      }
-      const styleId = taskId !== null ?
-          taskId * numStyles / numTasks % numStyles : null;
-      slices[i] = {taskId, styleId};
+  _getDatesAndSlices(tasks) {
+    const NUM_SHOW_DAYS = 7;
+    const HOURS_PER_DAY = 24;
+
+    // Generate dates
+    const now = new Date();
+    const globalBegin = new Date(now.valueOf());
+    globalBegin.setHours(0, 0, 0, 0);
+    globalBegin.setDate(globalBegin.getDate() - NUM_SHOW_DAYS);
+
+    const dates = new Array(NUM_SHOW_DAYS);
+    for (let i = 0; i < NUM_SHOW_DAYS; ++i) {
+      const currDate = new Date(globalBegin.valueOf());
+      currDate.setDate(currDate.getDate() + i);
+      dates[i] = currDate;
     }
 
-    return [
-      {
-        date: new Date(1513785600000),
-        begin: 1513785600000,
-        end: 1513872000000,
-        slices: slices,
-      },
-      {
-        date: new Date(1513872000000),
-        begin: 1513872000000,
-        end: 1513958400000,
-        slices: slices,
-      },
-      {
-        date: new Date(1513958400000),
-        begin: 1513958400000,
-        end: 1514044800000,
-        slices: slices,
-      },
-    ];
+    // Mock tasks
+    const taskLoopSteps = 100;
+    const mockedTasks = new Array(taskLoopSteps);
+    for (let i = 0; i < 20; ++i) {
+      mockedTasks[i] = {taskId: 0, styleId: 0};
+    }
+    for (let i = 20; i < 50; ++i) {
+      mockedTasks[i] = {taskId: 1, styleId: 7};
+    }
+    for (let i = 50; i < 60; ++i) {
+      mockedTasks[i] = {taskId: 2, styleId: 14};
+    }
+    for (let i = 60; i < 100; ++i) {
+      mockedTasks[i] = {taskId: null, styleId: null};
+    }
+
+    // Generate slices
+    /** @type {number} */
+    const slicesPerHour = this.props.configs.slice.slicesPerHour;
+    const slicesPerDay = slicesPerHour * HOURS_PER_DAY;
+
+    const todayBegin = new Date(now.valueOf());
+    todayBegin.setHours(0, 0, 0, 0);
+    const elapsed = now.valueOf() - todayBegin.valueOf();
+    const sliceDuration = 60 * 60 * 1000 / slicesPerHour;
+    const numSlicesToday = Math.ceil(elapsed / sliceDuration);
+    const numSlicesTotal = slicesPerDay * (NUM_SHOW_DAYS - 1) + numSlicesToday;
+
+    const slices = new Array(numSlicesTotal);
+    for (let i = 0; i < numSlicesTotal; ++i) {
+      const currTask = mockedTasks[i % taskLoopSteps];
+      const currBegin = globalBegin.valueOf() + sliceDuration * i;
+      slices[i] = {
+        begin: currBegin,
+        taskId: currTask.taskId,
+        styleId: currTask.styleId,
+      };
+    }
+
+    return {dates, slices};
   }
 }
 
@@ -103,8 +134,8 @@ Body.propTypes = {
     tags: PropTypes.arrayOf(PropTypes.string).isRequired,
   })).isRequired,
   configs: PropTypes.object.isRequired,
-  onDayHover: PropTypes.func.isRequired,
-  onSliceHover: PropTypes.func.isRequired,
+  onSliceEnter: PropTypes.func.isRequired,
+  onSliceLeave: PropTypes.func.isRequired,
 };
 
 export {Body};

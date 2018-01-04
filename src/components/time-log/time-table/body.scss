@@ -5,4 +5,29 @@
   width: 100%;
   border-spacing: 0 1em;
   table-layout: fixed;
+
+  .day {
+    display: table-row;
+    height: 2.5em;
+    font-family: monospace;
+
+    .date {
+      position: relative;
+      display: table-cell;
+      width: $date-width;
+
+      .year {
+        position: absolute;
+        bottom: 1.9em;
+        font-size: 0.75em;
+        color: $color-text-p5;
+      }
+
+      .monthDay {
+        position: absolute;
+        bottom: 0.2em;
+        color: $color-text-p3;
+      }
+    }
+  }
 }

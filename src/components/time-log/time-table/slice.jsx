@@ -18,6 +18,7 @@ class Slice extends Component {
     super(props);
 
     this.onMouseEnter = this.onMouseEnter.bind(this);
+    this.onMouseLeave = this.onMouseLeave.bind(this);
   }
 
   /**
@@ -33,6 +34,7 @@ class Slice extends Component {
                 [`task${this.props.styleId}`]: this.props.styleId !== null,
               })}
               onMouseEnter={this.onMouseEnter}
+              onMouseLeave={this.onMouseLeave}
         />
     );
   }
@@ -41,7 +43,14 @@ class Slice extends Component {
    * On mouse enter
    */
   onMouseEnter() {
-    this.props.onSliceHover(this.props.date, this.props.id, this.props.taskId);
+    this.props.onSliceEnter(this.props.begin, this.props.taskId);
+  }
+
+  /**
+   * On mouse leave
+   */
+  onMouseLeave() {
+    this.props.onSliceLeave(this.props.begin, this.props.taskId);
   }
 }
 
@@ -49,11 +58,11 @@ Slice.propTypes = {
   selectableRef: PropTypes.func.isRequired,
   selected: PropTypes.bool.isRequired,
   selecting: PropTypes.bool.isRequired,
-  date: PropTypes.instanceOf(Date),
-  id: PropTypes.number.isRequired,
+  begin: PropTypes.number.isRequired,
   taskId: PropTypes.number,
   styleId: PropTypes.number,
-  onSliceHover: PropTypes.func.isRequired,
+  onSliceEnter: PropTypes.func.isRequired,
+  onSliceLeave: PropTypes.func.isRequired,
 };
 
 export default createSelectable(Slice);
