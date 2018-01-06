@@ -1,20 +1,19 @@
 @import './index';
 
 .body {
-  display: table;
-  width: 100%;
-  border-spacing: 0 1em;
-  table-layout: fixed;
+  display: flex;
+  margin: 1em 0;
 
-  .day {
-    display: table-row;
-    height: 2.5em;
-    font-family: monospace;
+  .dates {
+    display: flex;
+    flex-flow: column nowrap;
+    flex: 0 0 $date-width;
 
     .date {
       position: relative;
-      display: table-cell;
-      width: $date-width;
+      flex: 0 0 $row-height;
+      margin-top: $row-gap;
+      font-family: monospace;
 
       .year {
         position: absolute;
@@ -29,5 +28,15 @@
         color: $color-text-p3;
       }
     }
+    .date:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .slices {
+    display: grid;
+    grid-auto-rows: $row-height;
+    grid-row-gap: $row-gap;
+    flex: 1 1 auto;
   }
 }

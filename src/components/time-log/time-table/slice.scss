@@ -1,13 +1,8 @@
 @import './index';
 
 .slice {
-  display: table-cell;
-  border-left: 0.15em solid $color-frame-bg;
   background-color: $color-slice-unused;
-}
-// remove the left border of the first slice
-.slice:nth-child(2) {
-  border-left: none;
+  box-shadow: 0.1em 0.1em $color-frame-shadow;
 }
 .slice:hover {
   background-color: $color-slice-unused-highlight;

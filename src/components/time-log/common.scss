@@ -18,7 +18,7 @@ $color-scale-fg: #AAAAAA;
 $color-scale-scale: #CCCCCC;
 
 $color-slice-unused: #DDDDDD;
-$color-slice-unused-highlight: $color-slice-unused * 1.05;
+$color-slice-unused-highlight: $color-slice-unused * 1.1;
 $color-slice-selecting: #8AA7DE;
 $color-slice-selecting-highlight: $color-slice-selecting * 1.2;
 $color-slice-selected: $color-slice-selecting;
@@ -67,5 +67,6 @@ $color-slice-task20: #c39;
 $color-slice-task20-highlight: $color-slice-task20 * 1.2;
 
 $color-task-summary-bg: #EEEEEE;
+$color-task-summary-project-bg: #E4E4E4;
 
 $menu-width: 11em;

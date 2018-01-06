@@ -29,10 +29,10 @@ class Body extends Component {
     const dateComponents = dates.map((date) => {
       const day = moment(date);
       return (
-          <span key={date.valueOf()} className={styles.date}>
+          <div key={date.valueOf()} className={styles.date}>
             <div className={styles.year}>{day.format('YYYY')}</div>
             <div className={styles.monthDay}>{day.format('MM-DD')}</div>
-          </span>
+          </div>
       );
     });
 
@@ -46,12 +46,18 @@ class Body extends Component {
         />
     ));
 
+    const slicesStyles = {
+      gridTemplateColumns:
+          `repeat(${this.props.numSlicesPerDay}, ${this.props.sliceWidth}px)`,
+      gridColumnGap: this.props.sliceGapH,
+    };
+
     return (
         <div className={styles.body}>
-          <div className={styles.dates}>
+          <div className={styles.dates} ref={this.props.datesRef}>
             {dateComponents}
           </div>
-          <div className={styles.slices}>
+          <div className={styles.slices} style={slicesStyles}>
             {sliceComponents}
           </div>
         </div>
@@ -83,18 +89,18 @@ class Body extends Component {
     }
 
     // Mock tasks
-    const taskLoopSteps = 100;
+    const taskLoopSteps = 120;
     const mockedTasks = new Array(taskLoopSteps);
-    for (let i = 0; i < 20; ++i) {
+    for (let i = 0; i < 24; ++i) {
       mockedTasks[i] = {taskId: 0, styleId: 0};
     }
-    for (let i = 20; i < 50; ++i) {
+    for (let i = 24; i < 54; ++i) {
       mockedTasks[i] = {taskId: 1, styleId: 7};
     }
-    for (let i = 50; i < 60; ++i) {
+    for (let i = 54; i < 84; ++i) {
       mockedTasks[i] = {taskId: 2, styleId: 14};
     }
-    for (let i = 60; i < 100; ++i) {
+    for (let i = 84; i < 120; ++i) {
       mockedTasks[i] = {taskId: null, styleId: null};
     }
 
@@ -134,8 +140,12 @@ Body.propTypes = {
     tags: PropTypes.arrayOf(PropTypes.string).isRequired,
   })).isRequired,
   configs: PropTypes.object.isRequired,
+  sliceWidth: PropTypes.number.isRequired,
+  sliceGapH: PropTypes.number.isRequired,
+  numSlicesPerDay: PropTypes.number.isRequired,
   onSliceEnter: PropTypes.func.isRequired,
   onSliceLeave: PropTypes.func.isRequired,
+  datesRef: PropTypes.func.isRequired,
 };
 
 export {Body};
