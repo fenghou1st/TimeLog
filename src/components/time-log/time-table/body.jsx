@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import Slice from './slice.jsx';
 import styles from './body.scss';
+import Slice from './slice.jsx';
 
 /**
  * Body of the time table
@@ -29,7 +29,7 @@ class Body extends Component {
     const dateComponents = dates.map((date) => {
       const day = moment(date);
       return (
-          <div key={date.valueOf()} className={styles.date}>
+          <div key={date} className={styles.date}>
             <div className={styles.year}>{day.format('YYYY')}</div>
             <div className={styles.monthDay}>{day.format('MM-DD')}</div>
           </div>
@@ -64,11 +64,19 @@ class Body extends Component {
     );
   }
 
+  // /**
+  //  * TODO: remove
+  //  * Test only
+  //  */
+  // componentDidUpdate() {
+  //   console.info('Time-table\'s body re-rendered');
+  // }
+
   /**
    * TODO: implement
    * Get day list and each day's slices
    * @param {Array.<Object>} tasks
-   * @return {{dates: Array.<Date>, slices: Array.<Object>}}
+   * @return {{dates: Array.<number>, slices: Array.<Object>}}
    * @private
    */
   _getDatesAndSlices(tasks) {
@@ -85,7 +93,7 @@ class Body extends Component {
     for (let i = 0; i < NUM_SHOW_DAYS; ++i) {
       const currDate = new Date(globalBegin.valueOf());
       currDate.setDate(currDate.getDate() + i);
-      dates[i] = currDate;
+      dates[i] = currDate.valueOf();
     }
 
     // Mock tasks

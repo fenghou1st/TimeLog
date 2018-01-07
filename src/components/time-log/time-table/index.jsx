@@ -5,6 +5,7 @@ import {loadConfig} from 'src/base/js/config';
 import {Body} from './body.jsx';
 import {Ruler} from './ruler.jsx';
 import {TaskSummary} from './task-summary.jsx';
+import {TaskCreation} from './task-creation.jsx';
 import styles from './index.scss';
 
 // const language = 'en';
@@ -29,7 +30,15 @@ class TimeTable extends Component {
         sliceWidth: 4,
         sliceGapH: 1,
       },
-      hoveredTask: null,
+      hovered: {
+        task: null,
+      },
+      selected: {
+        periods: [],
+        taskName: null,
+        projectId: null,
+        tagIds: [],
+      },
     };
 
     /** @type {Object} */
@@ -42,10 +51,9 @@ class TimeTable extends Component {
     /** @type {Element} */
     this.datesNode = null;
 
-    /** @type {{begin: ?number, taskId: ?number, timeoutID: ?number}} */
+    /** @type {{begin: ?number, timeoutID: ?number}} */
     this.hovered = {
       begin: null,
-      taskId: null,
       timeoutID: null,
     };
 
@@ -63,34 +71,48 @@ class TimeTable extends Component {
         this.state.dimensions.sliceGapH;
 
     return (
-        <SelectableGroup
-            className={styles.table}
-            style={{width: this.state.dimensions.tableWidth}}
-            ref={(el) => this.rootNode = el !== null ? el.rootNode : null}
-            enableDeselect
-            onSelectionFinish={this.onSelectionFinish}
-            ignoreList={['.not-selectable']}
+        <div className={styles.table}
+             style={{width: this.state.dimensions.tableWidth}}
+             ref={(el) => this.rootNode = el}
         >
-          <Ruler position='top'
-                 configs={this.configs}
-                 scaleWidth={scaleWidth}
-          />
-          <Body tasks={this.state.tasks}
-                configs={this.configs}
-                sliceWidth={this.state.dimensions.sliceWidth}
-                sliceGapH={this.state.dimensions.sliceGapH}
-                numSlicesPerDay={this.numSlicesPerDay}
-                onSliceEnter={this.onSliceEnter}
-                onSliceLeave={this.onSliceLeave}
-                datesRef={(el) => this.datesNode = el}
-          />
-          <Ruler position='bottom'
-                 configs={this.configs}
-                 scaleWidth={scaleWidth}
-          />
-          <TaskSummary task={this.state.hoveredTask}/>
-        </SelectableGroup>
+          <TaskSummary task={this.state.hovered.task}/>
+          <SelectableGroup className={styles.selectableGroup}
+                           enableDeselect
+                           onSelectionFinish={this.onSelectionFinish}
+                           ignoreList={['.not-selectable']}
+          >
+            <Ruler position='top'
+                   configs={this.configs}
+                   scaleWidth={scaleWidth}
+            />
+            <Body tasks={this.state.tasks}
+                  configs={this.configs}
+                  sliceWidth={this.state.dimensions.sliceWidth}
+                  sliceGapH={this.state.dimensions.sliceGapH}
+                  numSlicesPerDay={this.numSlicesPerDay}
+                  onSliceEnter={this.onSliceEnter}
+                  onSliceLeave={this.onSliceLeave}
+                  datesRef={(el) => this.datesNode = el}
+            />
+            <Ruler position='bottom'
+                   configs={this.configs}
+                   scaleWidth={scaleWidth}
+            />
+          </SelectableGroup>
+          {
+            this.state.selected.periods.length > 0 &&
+            <TaskCreation data={this.state.selected}/>
+          }
+        </div>
     );
+  }
+
+  /**
+   * TODO: remove
+   * Test only
+   */
+  componentDidUpdate() {
+    console.info('Time-table re-rendered');
   }
 
   /**
@@ -150,9 +172,7 @@ class TimeTable extends Component {
     if (this.state.dimensions.tableWidth !== tableWidth ||
         this.state.dimensions.sliceWidth !== sliceWidth ||
         this.state.dimensions.sliceGapH !== sliceGapH) {
-      this.setState({
-        dimensions: {tableWidth, sliceWidth, sliceGapH},
-      });
+      this.setState({dimensions: {tableWidth, sliceWidth, sliceGapH}});
     }
   }
 
@@ -216,8 +236,8 @@ class TimeTable extends Component {
         begin: 1513863200000, // 2017-12-21 21:33 +0800
         end: 1513864200000, // 2017-12-21 21:50 +0800
         name: 'test task 001 test task 001 test task 001 test task 001'
-          + ' test task 001 test task 001 test task 001 test task 001'
-          + ' test task 001 test task 001 test task 001 test task 001',
+        + ' test task 001 test task 001 test task 001 test task 001'
+        + ' test task 001 test task 001 test task 001 test task 001',
         project: 'test project 001 test project 001',
         tags: ['test tag 001', 'test tag 002', 'test tag 003'],
       },
@@ -242,11 +262,59 @@ class TimeTable extends Component {
    * @param {Array.<SelectableItem>} selectedItems
    */
   onSelectionFinish(selectedItems) {
-    // TODO: get date & time
-    console.info(selectedItems);
-    // TODO: log duration
+    const periods = this._getPeriods(selectedItems);
 
-    // TODO: 显示所选时间段，并出现一行文本框，提示填写任务名，填写任务名之后继续显示其他填写项
+    this.setState((prevState, props) => ({
+          selected: {
+            periods: periods,
+            taskName: prevState.selected.taskName,
+            projectId: prevState.selected.projectId,
+            tagIds: prevState.selected.tagIds,
+          },
+        }),
+    );
+  }
+
+  /**
+   * @param {Array.<SelectableItem>} selectedItems
+   * @return {Array.<Object>}
+   * @private
+   */
+  _getPeriods(selectedItems) {
+    /** @type {number} */
+    const msPerHour = 60 * 60 * 1000;
+    const slicesPerHour = this.configs.slice.slicesPerHour;
+    const duration = msPerHour / slicesPerHour;
+
+    const beginTimes = selectedItems.map((item) => item.props.begin);
+    beginTimes.sort((lhs, rhs) => lhs - rhs);
+
+    const periods = [];
+    let currBegin = null;
+    let currEnd = null;
+    beginTimes.forEach((begin) => {
+      if (currBegin === null) {
+        currBegin = begin;
+        currEnd = currBegin + duration;
+        return;
+      }
+
+      if (begin === currEnd) { // seamless join
+        currEnd = begin + duration;
+      } else if (begin > currEnd) { // found a gap
+        periods.push({begin: currBegin, end: currEnd});
+        currBegin = begin;
+        currEnd = currBegin + duration;
+      } else { // data error
+        throw new Error(`Slices not sorted in ascending order`);
+      }
+    });
+
+    if (currBegin !== null) {
+      periods.push({begin: currBegin, end: currEnd});
+    }
+
+    return periods;
   }
 
   /**
@@ -255,7 +323,6 @@ class TimeTable extends Component {
    */
   onSliceEnter(begin, taskId) {
     this.hovered.begin = begin;
-    this.hovered.taskId = taskId;
 
     if (this.hovered.timeoutID !== null) {
       window.clearTimeout(this.hovered.timeoutID);
@@ -267,20 +334,19 @@ class TimeTable extends Component {
       hoveredTask = this.state.tasks[taskId];
     }
 
-    if (this.state.hoveredTask === hoveredTask) {
-      return;
+    if (this.state.hovered.task !== hoveredTask) {
+      this.setState({hovered: {task: hoveredTask}});
     }
-
-    this.setState({hoveredTask});
   }
 
   /**
+   * TODO: translate comments
+   * 改变状态前先等待一小会儿，然后只有在当前确实没有悬停于任何 slice 之上时，才会清除展示内容
    * @param {number} begin
    * @param {?number} taskId
    */
   onSliceLeave(begin, taskId) {
     this.hovered.begin = null;
-    this.hovered.taskId = null;
 
     if (this.hovered.timeoutID !== null) {
       window.clearTimeout(this.hovered.timeoutID);
@@ -288,12 +354,10 @@ class TimeTable extends Component {
     }
 
     this.hovered.timeoutID = window.setTimeout(() => {
-      if (this.hovered.begin === null &&
-          this.hovered.taskId === null &&
-          this.state.hoveredTask !== null) {
-        this.setState({hoveredTask: null});
+      if (this.hovered.begin === null && this.state.hovered.task !== null) {
+        this.setState({hovered: {task: null}});
       }
-    }, 500);
+    }, 200);
   }
 }
 

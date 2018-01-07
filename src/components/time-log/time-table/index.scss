@@ -6,6 +6,11 @@ $date-width: 4em;
 
 .table {
   padding: 1em;
+
+  .selectableGroup {
+    position: relative;
+    cursor: default;
+  }
 }
 
 :global {

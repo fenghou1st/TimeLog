@@ -1,17 +1,20 @@
 @import './index';
 
-.summary {
+.creation {
   display: flex;
   align-items: center;
   height: 2.5em;
-  margin-bottom: 1em;
+  margin-top: 1em;
   padding: 0 0.5em;
   box-shadow: 0.1em 0.1em $color-frame-shadow;
   color: $color-text-p4;
   background-color: $color-task-summary-bg;
+  overflow: hidden;
 
-  .time {
+  .period {
     flex: 0 0 auto;
+    margin-right: 0.5em;
+    cursor: default;
 
     .timeBegin {
       display: block;
@@ -32,15 +35,10 @@
     }
   }
 
-  .project {
-    flex: 0 0 10em;
-    margin-left: 0.5em;
-    padding: 0.5em;
-    border-radius: 0.25em;
-    background-color: $color-task-summary-project-bg;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  .ellipsis {
+    flex: 0 0 auto;
+    margin-right: 0.5em;
+    cursor: default;
   }
 
   .name {

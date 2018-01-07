@@ -39,6 +39,14 @@ class Slice extends Component {
     );
   }
 
+  // /**
+  //  * TODO: remove
+  //  * Test only
+  //  */
+  // componentDidUpdate() {
+  //   console.info(`Time-table's slice re-rendered: ${this.props.begin}`);
+  // }
+
   /**
    * On mouse enter
    */

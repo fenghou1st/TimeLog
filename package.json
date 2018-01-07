@@ -14,7 +14,8 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-fontawesome": "^1.6.1",
-    "react-selectable-fast": "^2.0.8"
+    "react-selectable-fast": "^2.0.8",
+    "react-tooltip": "^3.4.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.6",

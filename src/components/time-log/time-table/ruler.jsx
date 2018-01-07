@@ -31,6 +31,14 @@ class Ruler extends Component {
     );
   }
 
+  // /**
+  //  * TODO: remove
+  //  * Test only
+  //  */
+  // componentDidUpdate() {
+  //   console.info('Time-table\'s ruler re-rendered');
+  // }
+
   /**
    * Render scales
    * @return {Array}

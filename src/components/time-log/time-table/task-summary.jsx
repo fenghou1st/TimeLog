@@ -26,8 +26,8 @@ class TaskSummary extends Component {
       return (<div className={styles.summary}/>);
     }
 
-    const beginTime = moment(new Date(this.props.task.begin));
-    const endTime = moment(new Date(this.props.task.end));
+    const beginTime = moment(this.props.task.begin);
+    const endTime = moment(this.props.task.end);
 
     return (
         <div className={styles.summary}>
@@ -58,6 +58,14 @@ class TaskSummary extends Component {
         </div>
     );
   }
+
+  // /**
+  //  * TODO: remove
+  //  * Test only
+  //  */
+  // componentDidUpdate() {
+  //   console.info('Time-table\'s task-summary re-rendered');
+  // }
 }
 
 TaskSummary.propTypes = {
