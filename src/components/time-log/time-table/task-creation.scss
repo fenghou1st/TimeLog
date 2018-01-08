@@ -1,51 +1,85 @@
 @import './index';
 
 .creation {
-  display: flex;
-  align-items: center;
-  height: 2.5em;
   margin-top: 1em;
   padding: 0 0.5em;
   box-shadow: 0.1em 0.1em $color-frame-shadow;
   color: $color-text-p4;
   background-color: $color-task-summary-bg;
-  overflow: hidden;
 
-  .period {
-    flex: 0 0 auto;
-    margin-right: 0.5em;
-    cursor: default;
+  .header {
+    display: flex;
+    align-items: center;
+    height: 2.5em;
 
-    .timeBegin {
-      display: block;
+    .period {
+      flex: 0 0 auto;
+      margin-right: 0.5em;
+      cursor: default;
+
+      .timeBegin {
+        display: block;
+      }
+
+      .timeEnd {
+        display: block;
+      }
+
+      .timeDate {
+        font-size: 0.75em;
+        color: $color-text-p5;
+      }
+
+      .timeTime {
+        font-size: 0.875em;
+        margin-left: 0.25em;
+      }
     }
 
-    .timeEnd {
-      display: block;
+    .ellipsis {
+      flex: 0 0 auto;
+      margin-right: 0.5em;
+      cursor: default;
     }
 
-    .timeDate {
-      font-size: 0.75em;
-      color: $color-text-p5;
-    }
-
-    .timeTime {
-      font-size: 0.875em;
-      margin-left: 0.25em;
+    .name {
+      flex: 1 1 auto;
+      margin-left: 0.5em;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 
-  .ellipsis {
-    flex: 0 0 auto;
-    margin-right: 0.5em;
-    cursor: default;
+  .project {
+    display: flex;
+    align-items: center;
+    height: 2.5em;
+
+    .icon {
+      flex: 0 0 auto;
+      font-size: 1.333333333em;
+    }
+
+    .name {
+      flex: 1 1 auto;
+      margin-left: 1em;
+    }
   }
 
-  .name {
-    flex: 1 1 auto;
-    margin-left: 0.5em;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  .tags {
+    display: flex;
+    align-items: center;
+    height: 2.5em;
+
+    .icon {
+      flex: 0 0 auto;
+      font-size: 1.333333333em;
+    }
+
+    .name {
+      flex: 0 0 auto;
+      margin-left: 1em;
+    }
   }
 }
