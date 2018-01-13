@@ -1,16 +1,19 @@
 import React, {Component} from 'react';
+import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import moment from 'moment/moment';
 import ReactTooltip from 'react-tooltip';
 import FontAwesome from 'react-fontawesome';
 import faStyles from 'font-awesome/css/font-awesome.css';
 
-import styles from './task-creation.scss';
+import styles from './task.scss';
+
+const boundClassNames = classNames.bind(styles);
 
 /**
- * Task creation row of the time table
+ * Task component of the time table
  */
-class TaskCreation extends Component {
+class Task extends Component {
   /**
    * @param {?Object} props
    */
@@ -18,9 +21,6 @@ class TaskCreation extends Component {
     super(props);
 
     this.state = {
-      name: null,
-      projectName: 'test project 001 test project 001',
-      tagNames: ['test tag 001', 'test tag 002', 'test tag 003'],
       folded: false,
     };
 
@@ -42,7 +42,7 @@ class TaskCreation extends Component {
             {this._renderPeriods()}
             <input className={styles.name}
                    type='text'
-                   value={this.props.data.name}
+                   value={this.props.data.taskName || ''}
                    onFocus={this.onFocusName}
                    onBlur={this.onBlurName}
                    onChange={this.onChangeName}
@@ -119,13 +119,20 @@ class TaskCreation extends Component {
    * @private
    */
   _renderProject() {
+    let projectName = null;
+
+    if (this.props.data.projectId !== null) {
+      const project = this.props.projects.get(this.props.data.projectId);
+      projectName = project.name;
+    }
+
     return (
         <div className={styles.project}>
           <FontAwesome className={styles.icon}
                        name='clone'
                        cssModule={faStyles}/>
           <div className={styles.name}>
-            {this.state.projectName}
+            {projectName}
           </div>
         </div>
     );
@@ -136,16 +143,41 @@ class TaskCreation extends Component {
    * @private
    */
   _renderTags() {
+    const tags = new Set();
+
+    if (this.props.data.projectId !== null) {
+      const project = this.props.projects.get(this.props.data.projectId);
+      project.tagIds.map((tagId) => {
+        const tag = this.props.tags.get(tagId);
+        tags.add(tag);
+      });
+    }
+
+    if (this.props.data.tagIds !== null) {
+      this.props.data.tagIds.map((tagId) => {
+        const tag = this.props.tags.get(tagId);
+        tags.add(tag);
+      });
+    }
+
+    const tagComponents = [];
+    tags.forEach((tag) => {
+      tagComponents.push(
+          <div key={tag.name}
+               className={boundClassNames('name', [`style${tag.styleId}`])}
+          >
+            {tag.name}
+          </div>,
+      );
+    });
+
     return (
         <div className={styles.tags}>
           <FontAwesome className={styles.icon}
                        name='tags'
-                       cssModule={faStyles}/>
-          {this.state.tagNames.map((name) => (
-              <div key={name} className={styles.name}>
-                {name}
-              </div>
-          ))}
+                       cssModule={faStyles}
+          />
+          {tagComponents}
         </div>
     );
   }
@@ -168,14 +200,15 @@ class TaskCreation extends Component {
    * @param {Event} event
    */
   onChangeName(event) {
-    console.log(`Old name: ${this.state.name}`);
-    this.setState({name: event.target.value});
+    console.log(`Old name: ${this.props.data.taskName}`);
     console.log(`New name: ${event.target.value}`);
   }
 }
 
-TaskCreation.propTypes = {
+Task.propTypes = {
   data: PropTypes.object.isRequired,
+  projects: PropTypes.instanceOf(Map).isRequired,
+  tags: PropTypes.instanceOf(Map).isRequired,
 };
 
-export {TaskCreation};
+export {Task};

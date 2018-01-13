@@ -4,8 +4,7 @@ import {SelectableGroup} from 'react-selectable-fast';
 import {loadConfig} from 'src/base/js/config';
 import {Body} from './body.jsx';
 import {Ruler} from './ruler.jsx';
-import {TaskSummary} from './task-summary.jsx';
-import {TaskCreation} from './task-creation.jsx';
+import {Task} from './task.jsx';
 import styles from './index.scss';
 
 // const language = 'en';
@@ -25,15 +24,15 @@ class TimeTable extends Component {
 
     this.state = {
       tasks: this.getTasks(),
+      projects: this.getProjects(),
+      tags: this.getTags(),
       dimensions: {
         tableWidth: 800,
         sliceWidth: 4,
         sliceGapH: 1,
       },
-      hovered: {
-        task: null,
-      },
       selected: {
+        taskId: null,
         periods: [],
         taskName: null,
         projectId: null,
@@ -48,19 +47,14 @@ class TimeTable extends Component {
 
     /** @type {Element} */
     this.rootNode = null;
+    /** @type {SelectableGroup} */
+    this.selectableGroup = null;
     /** @type {Element} */
     this.datesNode = null;
 
-    /** @type {{begin: ?number, timeoutID: ?number}} */
-    this.hovered = {
-      begin: null,
-      timeoutID: null,
-    };
-
     this._updateDimensions = this._updateDimensions.bind(this);
-    this.onSelectionFinish = this.onSelectionFinish.bind(this);
-    this.onSliceEnter = this.onSliceEnter.bind(this);
-    this.onSliceLeave = this.onSliceLeave.bind(this);
+    this.onSelectUnusedSlices = this.onSelectUnusedSlices.bind(this);
+    this.onSelectUsedSlice = this.onSelectUsedSlice.bind(this);
   }
 
   /**
@@ -75,24 +69,24 @@ class TimeTable extends Component {
              style={{width: this.state.dimensions.tableWidth}}
              ref={(el) => this.rootNode = el}
         >
-          <TaskSummary task={this.state.hovered.task}/>
           <SelectableGroup className={styles.selectableGroup}
                            enableDeselect
-                           onSelectionFinish={this.onSelectionFinish}
+                           onSelectionFinish={this.onSelectUnusedSlices}
                            ignoreList={['.not-selectable']}
+                           ref={(el) => this.selectableGroup = el}
           >
             <Ruler position='top'
                    configs={this.configs}
                    scaleWidth={scaleWidth}
             />
             <Body tasks={this.state.tasks}
+                  selectedTaskId={this.state.selected.taskId}
                   configs={this.configs}
                   sliceWidth={this.state.dimensions.sliceWidth}
                   sliceGapH={this.state.dimensions.sliceGapH}
                   numSlicesPerDay={this.numSlicesPerDay}
-                  onSliceEnter={this.onSliceEnter}
-                  onSliceLeave={this.onSliceLeave}
-                  datesRef={(el) => this.datesNode = el}
+                  onSelectUsedSlice={this.onSelectUsedSlice}
+                  setDatesRef={(el) => this.datesNode = el}
             />
             <Ruler position='bottom'
                    configs={this.configs}
@@ -101,7 +95,10 @@ class TimeTable extends Component {
           </SelectableGroup>
           {
             this.state.selected.periods.length > 0 &&
-            <TaskCreation data={this.state.selected}/>
+            <Task data={this.state.selected}
+                  projects={this.state.projects}
+                  tags={this.state.tags}
+            />
           }
         </div>
     );
@@ -228,65 +225,124 @@ class TimeTable extends Component {
   /**
    * TODO: implement
    * Get tasks from the remote server
-   * @return {Array.<Object>}
+   * @return {Map<number,Object>}
    */
   getTasks() {
-    return [
-      {
+    return new Map([
+      [
+        1, {
         begin: 1513863200000, // 2017-12-21 21:33 +0800
         end: 1513864200000, // 2017-12-21 21:50 +0800
         name: 'test task 001 test task 001 test task 001 test task 001'
         + ' test task 001 test task 001 test task 001 test task 001'
         + ' test task 001 test task 001 test task 001 test task 001',
-        project: 'test project 001 test project 001',
-        tags: ['test tag 001', 'test tag 002', 'test tag 003'],
-      },
-      {
+        projectId: 1,
+        tagIds: [1, 2, 3],
+      }],
+      [
+        2, {
         begin: 1513949600000, // 2017-12-22 21:33 +0800
         end: 1513950600000, // 2017-12-22 21:50 +0800
         name: 'test task 002 test task 002 test task 002 test task 002',
-        project: 'test project 001',
-        tags: ['test tag 002', 'test tag 003', 'test tag 004'],
-      },
-      {
+        projectId: 2,
+        tagIds: [2, 3, 4],
+      }],
+      [
+        3, {
         begin: 1514036000000, // 2017-12-23 21:33:20 +0800
         end: 1514037000000, // 2017-12-23 21:50:00 +0800
         name: 'test task 003 test task 003 test task 003 test task 003',
-        project: 'test project 002',
-        tags: ['test tag 003', 'test tag 004', 'test tag 005'],
-      },
-    ];
+        projectId: 3,
+        tagIds: [3, 4, 5],
+      }],
+    ]);
   }
 
   /**
-   * @param {Array.<SelectableItem>} selectedItems
+   * TODO: implement
+   * Get projects from the remote server
+   * @return {Map<number,Object>}
    */
-  onSelectionFinish(selectedItems) {
-    const periods = this._getPeriods(selectedItems);
-
-    this.setState((prevState, props) => ({
-          selected: {
-            periods: periods,
-            taskName: prevState.selected.taskName,
-            projectId: prevState.selected.projectId,
-            tagIds: prevState.selected.tagIds,
-          },
-        }),
-    );
+  getProjects() {
+    return new Map([
+      [1, {name: 'test project 001', tagIds: [1, 2, 3]}],
+      [2, {name: 'test project 002', tagIds: [2, 3, 4]}],
+      [3, {name: 'test project 003', tagIds: [3, 4, 5]}],
+    ]);
   }
 
   /**
-   * @param {Array.<SelectableItem>} selectedItems
+   * TODO: implement
+   * Get tags from the remote server
+   * @return {Map<number,Object>}
+   */
+  getTags() {
+    return new Map([
+      [1, {name: 'test tag 001', styleId: 1}],
+      [2, {name: 'test tag 002', styleId: 2}],
+      [3, {name: 'test tag 003', styleId: 3}],
+      [4, {name: 'test tag 004', styleId: 4}],
+      [5, {name: 'test tag 005', styleId: 5}],
+    ]);
+  }
+
+  /**
+   * @param {Array.<SelectableItem>} slices
+   */
+  onSelectUnusedSlices(slices) {
+    const periods = this._getPeriods(slices);
+
+    this.setState({
+      selected: {
+        taskId: null,
+        periods: periods,
+        taskName: null,
+        projectId: null,
+        tagIds: [],
+      },
+    });
+  }
+
+  /**
+   * @param {number} taskId
+   * @param {number} begin - Begin time of the slice
+   */
+  onSelectUsedSlice(taskId, begin) {
+    this.clearSelection();
+
+    const task = this.state.tasks.get(taskId);
+
+    this.setState({
+      selected: {
+        taskId: taskId,
+        periods: [{begin: task.begin, end: task.end}],
+        taskName: task.name,
+        projectId: task.projectId,
+        tagIds: task.tagIds,
+      },
+    });
+  }
+
+  /**
+   * Deselect all slices
+   */
+  clearSelection() {
+    this.selectableGroup.clearSelection();
+    this.onSelectUnusedSlices([]);
+  }
+
+  /**
+   * @param {Array.<SelectableItem>} slices
    * @return {Array.<Object>}
    * @private
    */
-  _getPeriods(selectedItems) {
+  _getPeriods(slices) {
     /** @type {number} */
     const msPerHour = 60 * 60 * 1000;
     const slicesPerHour = this.configs.slice.slicesPerHour;
     const duration = msPerHour / slicesPerHour;
 
-    const beginTimes = selectedItems.map((item) => item.props.begin);
+    const beginTimes = slices.map((item) => item.props.begin);
     beginTimes.sort((lhs, rhs) => lhs - rhs);
 
     const periods = [];
@@ -315,49 +371,6 @@ class TimeTable extends Component {
     }
 
     return periods;
-  }
-
-  /**
-   * @param {number} begin
-   * @param {?number} taskId
-   */
-  onSliceEnter(begin, taskId) {
-    this.hovered.begin = begin;
-
-    if (this.hovered.timeoutID !== null) {
-      window.clearTimeout(this.hovered.timeoutID);
-      this.hovered.timeoutID = null;
-    }
-
-    let hoveredTask = null;
-    if (taskId !== null) {
-      hoveredTask = this.state.tasks[taskId];
-    }
-
-    if (this.state.hovered.task !== hoveredTask) {
-      this.setState({hovered: {task: hoveredTask}});
-    }
-  }
-
-  /**
-   * TODO: translate comments
-   * 改变状态前先等待一小会儿，然后只有在当前确实没有悬停于任何 slice 之上时，才会清除展示内容
-   * @param {number} begin
-   * @param {?number} taskId
-   */
-  onSliceLeave(begin, taskId) {
-    this.hovered.begin = null;
-
-    if (this.hovered.timeoutID !== null) {
-      window.clearTimeout(this.hovered.timeoutID);
-      this.hovered.timeoutID = null;
-    }
-
-    this.hovered.timeoutID = window.setTimeout(() => {
-      if (this.hovered.begin === null && this.state.hovered.task !== null) {
-        this.setState({hovered: {task: null}});
-      }
-    }, 200);
   }
 }
 

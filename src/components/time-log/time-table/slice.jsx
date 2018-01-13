@@ -17,8 +17,7 @@ class Slice extends Component {
   constructor(props) {
     super(props);
 
-    this.onMouseEnter = this.onMouseEnter.bind(this);
-    this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   /**
@@ -30,11 +29,11 @@ class Slice extends Component {
               className={boundClassNames('slice', {
                 selected: this.props.selected,
                 selecting: this.props.selecting,
+                highlighted: this.props.highlighted,
                 ['not-selectable']: this.props.taskId !== null,
                 [`task${this.props.styleId}`]: this.props.styleId !== null,
               })}
-              onMouseEnter={this.onMouseEnter}
-              onMouseLeave={this.onMouseLeave}
+              onClick={this.onClick}
         />
     );
   }
@@ -48,17 +47,10 @@ class Slice extends Component {
   // }
 
   /**
-   * On mouse enter
+   * On mouse click (on unselectable slices)
    */
-  onMouseEnter() {
-    this.props.onSliceEnter(this.props.begin, this.props.taskId);
-  }
-
-  /**
-   * On mouse leave
-   */
-  onMouseLeave() {
-    this.props.onSliceLeave(this.props.begin, this.props.taskId);
+  onClick() {
+    this.props.onSelectUsedSlice(this.props.taskId, this.props.begin);
   }
 }
 
@@ -69,8 +61,8 @@ Slice.propTypes = {
   begin: PropTypes.number.isRequired,
   taskId: PropTypes.number,
   styleId: PropTypes.number,
-  onSliceEnter: PropTypes.func.isRequired,
-  onSliceLeave: PropTypes.func.isRequired,
+  highlighted: PropTypes.bool.isRequired,
+  onSelectUsedSlice: PropTypes.func.isRequired,
 };
 
 export default createSelectable(Slice);

@@ -14,17 +14,13 @@ class Body extends Component {
    */
   constructor(props) {
     super(props);
-
-    this.state = {
-      tasks: this.props.tasks,
-    };
   }
 
   /**
    * @return {*}
    */
   render() {
-    const {dates, slices} = this._getDatesAndSlices(this.state.tasks);
+    const {dates, slices} = this._getDatesAndSlices();
 
     const dateComponents = dates.map((date) => {
       const day = moment(date);
@@ -36,15 +32,20 @@ class Body extends Component {
       );
     });
 
-    const sliceComponents = slices.map(({begin, taskId, styleId}) => (
-        <Slice key={begin}
-               begin={begin}
-               taskId={taskId}
-               styleId={styleId}
-               onSliceEnter={this.props.onSliceEnter}
-               onSliceLeave={this.props.onSliceLeave}
-        />
-    ));
+    const sliceComponents = slices.map(({begin, taskId, styleId}) => {
+      const highlighted = this.props.selectedTaskId !== null &&
+          this.props.selectedTaskId === taskId;
+
+      return (
+          <Slice key={begin}
+                 begin={begin}
+                 taskId={taskId}
+                 styleId={styleId}
+                 highlighted={highlighted}
+                 onSelectUsedSlice={this.props.onSelectUsedSlice}
+          />
+      );
+    });
 
     const slicesStyles = {
       gridTemplateColumns:
@@ -54,7 +55,7 @@ class Body extends Component {
 
     return (
         <div className={styles.body}>
-          <div className={styles.dates} ref={this.props.datesRef}>
+          <div className={styles.dates} ref={this.props.setDatesRef}>
             {dateComponents}
           </div>
           <div className={styles.slices} style={slicesStyles}>
@@ -75,11 +76,10 @@ class Body extends Component {
   /**
    * TODO: implement
    * Get day list and each day's slices
-   * @param {Array.<Object>} tasks
    * @return {{dates: Array.<number>, slices: Array.<Object>}}
    * @private
    */
-  _getDatesAndSlices(tasks) {
+  _getDatesAndSlices() {
     const NUM_SHOW_DAYS = 7;
     const HOURS_PER_DAY = 24;
 
@@ -100,13 +100,13 @@ class Body extends Component {
     const taskLoopSteps = 120;
     const mockedTasks = new Array(taskLoopSteps);
     for (let i = 0; i < 24; ++i) {
-      mockedTasks[i] = {taskId: 0, styleId: 0};
+      mockedTasks[i] = {taskId: 1, styleId: 0};
     }
     for (let i = 24; i < 54; ++i) {
-      mockedTasks[i] = {taskId: 1, styleId: 7};
+      mockedTasks[i] = {taskId: 2, styleId: 7};
     }
     for (let i = 54; i < 84; ++i) {
-      mockedTasks[i] = {taskId: 2, styleId: 14};
+      mockedTasks[i] = {taskId: 3, styleId: 14};
     }
     for (let i = 84; i < 120; ++i) {
       mockedTasks[i] = {taskId: null, styleId: null};
@@ -140,20 +140,14 @@ class Body extends Component {
 }
 
 Body.propTypes = {
-  tasks: PropTypes.arrayOf(PropTypes.shape({
-    begin: PropTypes.number.isRequired,
-    end: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    project: PropTypes.string.isRequired,
-    tags: PropTypes.arrayOf(PropTypes.string).isRequired,
-  })).isRequired,
+  tasks: PropTypes.instanceOf(Map).isRequired,
+  selectedTaskId: PropTypes.number,
   configs: PropTypes.object.isRequired,
   sliceWidth: PropTypes.number.isRequired,
   sliceGapH: PropTypes.number.isRequired,
   numSlicesPerDay: PropTypes.number.isRequired,
-  onSliceEnter: PropTypes.func.isRequired,
-  onSliceLeave: PropTypes.func.isRequired,
-  datesRef: PropTypes.func.isRequired,
+  onSelectUsedSlice: PropTypes.func.isRequired,
+  setDatesRef: PropTypes.func.isRequired,
 };
 
 export {Body};
