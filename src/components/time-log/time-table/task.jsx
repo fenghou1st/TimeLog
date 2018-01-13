@@ -10,6 +10,9 @@ import styles from './task.scss';
 
 const boundClassNames = classNames.bind(styles);
 
+const language = 'en';
+const transData = require(`./translations.${language}.yml`);
+
 /**
  * Task component of the time table
  */
@@ -20,16 +23,12 @@ class Task extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      folded: false,
-    };
-
     this.DATE_FORMAT = 'MM-DD';
     this.TIME_FORMAT = 'HH:mm';
 
-    this.onFocusName = this.onFocusName.bind(this);
-    this.onBlurName = this.onBlurName.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
+    this.onChangeProject = this.onChangeProject.bind(this);
+    this.onAddTag = this.onAddTag.bind(this);
   }
 
   /**
@@ -37,19 +36,19 @@ class Task extends Component {
    */
   render() {
     return (
-        <div className={styles.creation}>
-          <div className={styles.header}>
+        <div className={styles.task}>
+          <div className={styles.periodsAndName}>
             {this._renderPeriods()}
             <input className={styles.name}
                    type='text'
                    value={this.props.data.taskName || ''}
-                   onFocus={this.onFocusName}
-                   onBlur={this.onBlurName}
+                   placeholder={transData.task.name.placeholder}
+                   autoFocus={true}
                    onChange={this.onChangeName}
             />
           </div>
-          {!this.state.folded && this._renderProject()}
-          {!this.state.folded && this._renderTags()}
+          {this._renderProject()}
+          {this._renderTags()}
         </div>
     );
   }
@@ -119,7 +118,7 @@ class Task extends Component {
    * @private
    */
   _renderProject() {
-    let projectName = null;
+    let projectName = transData.task.projectName.placeholder;
 
     if (this.props.data.projectId !== null) {
       const project = this.props.projects.get(this.props.data.projectId);
@@ -129,9 +128,11 @@ class Task extends Component {
     return (
         <div className={styles.project}>
           <FontAwesome className={styles.icon}
-                       name='clone'
+                       name='cube'
                        cssModule={faStyles}/>
-          <div className={styles.name}>
+          <div className={styles.name}
+               onClick={this.onChangeProject}
+          >
             {projectName}
           </div>
         </div>
@@ -143,65 +144,88 @@ class Task extends Component {
    * @private
    */
   _renderTags() {
-    const tags = new Set();
+    const tags = new Map();
 
     if (this.props.data.projectId !== null) {
       const project = this.props.projects.get(this.props.data.projectId);
       project.tagIds.map((tagId) => {
         const tag = this.props.tags.get(tagId);
-        tags.add(tag);
+        tags.set(tagId, tag);
       });
     }
 
     if (this.props.data.tagIds !== null) {
       this.props.data.tagIds.map((tagId) => {
         const tag = this.props.tags.get(tagId);
-        tags.add(tag);
+        tags.set(tagId, tag);
       });
     }
 
     const tagComponents = [];
-    tags.forEach((tag) => {
+    tags.forEach((tag, tagId) => {
       tagComponents.push(
-          <div key={tag.name}
-               className={boundClassNames('name', [`style${tag.styleId}`])}
+          <div key={tagId}
+               className={boundClassNames('name', [`style-${tag.styleId}`])}
           >
-            {tag.name}
+            <span>{tag.name}</span>
+            <FontAwesome className={styles.remove}
+                         name='remove'
+                         cssModule={faStyles}
+                         onClick={() => this.onRemoveTag(tagId)}
+            />
           </div>,
       );
     });
 
     return (
-        <div className={styles.tags}>
+        <div className={styles.tagsWrapper}>
           <FontAwesome className={styles.icon}
                        name='tags'
                        cssModule={faStyles}
           />
-          {tagComponents}
+          <div className={styles.tags}>
+            {tagComponents}
+            <FontAwesome className={styles.add}
+                         name='plus'
+                         cssModule={faStyles}
+                         onClick={this.onAddTag}
+            />
+          </div>
         </div>
     );
   }
 
   /**
-   * On focus name input
+   * TODO: implement
+   * On change project
    */
-  onFocusName() {
-    this.setState({folded: false});
+  onChangeProject() {
+    console.log('Change project');
   }
 
   /**
-   * On blur name input
+   * TODO: implement
+   * On add tag
    */
-  onBlurName() {
-    this.setState({folded: true});
+  onAddTag() {
+    console.log('Add tag');
+  }
+
+  /**
+   * TODO: implement
+   * On remove tag
+   * @param {number} tagId
+   */
+  onRemoveTag(tagId) {
+    console.log(`Remove tag ${tagId}`);
   }
 
   /**
    * @param {Event} event
    */
   onChangeName(event) {
-    console.log(`Old name: ${this.props.data.taskName}`);
-    console.log(`New name: ${event.target.value}`);
+    this.props.onChangeData(
+        event.target.value, this.props.data.projectId, this.props.data.tagIds);
   }
 }
 
@@ -209,6 +233,7 @@ Task.propTypes = {
   data: PropTypes.object.isRequired,
   projects: PropTypes.instanceOf(Map).isRequired,
   tags: PropTypes.instanceOf(Map).isRequired,
+  onChangeData: PropTypes.func.isRequired,
 };
 
 export {Task};

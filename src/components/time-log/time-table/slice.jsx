@@ -31,7 +31,7 @@ class Slice extends Component {
                 selecting: this.props.selecting,
                 highlighted: this.props.highlighted,
                 ['not-selectable']: this.props.taskId !== null,
-                [`task${this.props.styleId}`]: this.props.styleId !== null,
+                [`style-${this.props.styleId}`]: this.props.styleId !== null,
               })}
               onClick={this.onClick}
         />

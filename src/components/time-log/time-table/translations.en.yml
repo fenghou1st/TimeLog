@@ -1,0 +1,5 @@
+task:
+  name:
+    placeholder:              Please describe the task
+  projectName:
+    placeholder:              Please choose a project

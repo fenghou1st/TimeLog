@@ -4,9 +4,22 @@ $color-text-p3: #666666;
 $color-text-p4: #999999;
 $color-text-p5: #CCCCCC;
 
+$colors-item-basic: (
+        #c99, #c66, #c33,
+        #c96, #c93,
+        #9c6, #9c3,
+        #9c9, #6c6, #3c3,
+        #6c9, #3c9,
+        #69c, #39c,
+        #99c, #66c, #33c,
+        #96c, #93c,
+        #c69, #c39);
+
 $color-frame-fg: #666666;
 $color-frame-bg: #F5F5F5;
 $color-frame-shadow: #CCCCCC;
+
+$color-input-bg: #FCFCFC;
 
 $color-menu-bg: #353535;
 $color-menu-bg-highlighted: #4A4A4A;
@@ -18,56 +31,12 @@ $color-scale-fg: #AAAAAA;
 $color-scale-scale: #CCCCCC;
 
 $color-slice-unused: #DDDDDD;
-$color-slice-unused-highlight: $color-slice-unused * 1.1;
 $color-slice-selecting: #8AA7DE;
-$color-slice-selecting-highlight: $color-slice-selecting * 1.2;
 $color-slice-selected: $color-slice-selecting;
-$color-slice-selected-highlight: $color-slice-selected * 1.2;
-// TODO: SASS list & @each
-$color-slice-task0: #c99;
-$color-slice-task0-highlight: $color-slice-task0 * 1.2;
-$color-slice-task1: #c66;
-$color-slice-task1-highlight: $color-slice-task1 * 1.2;
-$color-slice-task2: #c33;
-$color-slice-task2-highlight: $color-slice-task2 * 1.2;
-$color-slice-task3: #c96;
-$color-slice-task3-highlight: $color-slice-task3 * 1.2;
-$color-slice-task4: #c93;
-$color-slice-task4-highlight: $color-slice-task4 * 1.2;
-$color-slice-task5: #9c6;
-$color-slice-task5-highlight: $color-slice-task5 * 1.2;
-$color-slice-task6: #9c3;
-$color-slice-task6-highlight: $color-slice-task6 * 1.2;
-$color-slice-task7: #9c9;
-$color-slice-task7-highlight: $color-slice-task7 * 1.2;
-$color-slice-task8: #6c6;
-$color-slice-task8-highlight: $color-slice-task8 * 1.2;
-$color-slice-task9: #3c3;
-$color-slice-task9-highlight: $color-slice-task9 * 1.2;
-$color-slice-task10: #6c9;
-$color-slice-task10-highlight: $color-slice-task10 * 1.2;
-$color-slice-task11: #3c9;
-$color-slice-task11-highlight: $color-slice-task11 * 1.2;
-$color-slice-task12: #69c;
-$color-slice-task12-highlight: $color-slice-task12 * 1.2;
-$color-slice-task13: #39c;
-$color-slice-task13-highlight: $color-slice-task13 * 1.2;
-$color-slice-task14: #99c;
-$color-slice-task14-highlight: $color-slice-task14 * 1.2;
-$color-slice-task15: #66c;
-$color-slice-task15-highlight: $color-slice-task15 * 1.2;
-$color-slice-task16: #33c;
-$color-slice-task16-highlight: $color-slice-task16 * 1.2;
-$color-slice-task17: #96c;
-$color-slice-task17-highlight: $color-slice-task17 * 1.2;
-$color-slice-task18: #93c;
-$color-slice-task18-highlight: $color-slice-task18 * 1.2;
-$color-slice-task19: #c69;
-$color-slice-task19-highlight: $color-slice-task19 * 1.2;
-$color-slice-task20: #c39;
-$color-slice-task20-highlight: $color-slice-task20 * 1.2;
 
-$color-task-summary-bg: #EEEEEE;
-$color-task-summary-project-bg: #E4E4E4;
+$color-task-bg: #EEEEEE;
+$color-task-project-bg: #E4E4E4;
+$color-task-tag-fg: #FFFFFF;
+$color-task-tag-bg: #CCCCCC;
 
 $menu-width: 11em;

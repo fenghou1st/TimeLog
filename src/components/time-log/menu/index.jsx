@@ -56,7 +56,7 @@ class Menu extends Component {
           </div>
           <div className={classNameProjects}>
             <FontAwesome className={styles.icon}
-                         name='clone'
+                         name='cubes'
                          cssModule={faStyles} />
             <span className={styles.name}>{transData.item.projects}</span>
           </div>

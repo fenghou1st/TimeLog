@@ -55,6 +55,7 @@ class TimeTable extends Component {
     this._updateDimensions = this._updateDimensions.bind(this);
     this.onSelectUnusedSlices = this.onSelectUnusedSlices.bind(this);
     this.onSelectUsedSlice = this.onSelectUsedSlice.bind(this);
+    this.onChangeTaskData = this.onChangeTaskData.bind(this);
   }
 
   /**
@@ -98,6 +99,7 @@ class TimeTable extends Component {
             <Task data={this.state.selected}
                   projects={this.state.projects}
                   tags={this.state.tags}
+                  onChangeData={this.onChangeTaskData}
             />
           }
         </div>
@@ -253,7 +255,7 @@ class TimeTable extends Component {
         end: 1514037000000, // 2017-12-23 21:50:00 +0800
         name: 'test task 003 test task 003 test task 003 test task 003',
         projectId: 3,
-        tagIds: [3, 4, 5],
+        tagIds: [1, 2, 3, 4, 5],
       }],
     ]);
   }
@@ -292,15 +294,27 @@ class TimeTable extends Component {
   onSelectUnusedSlices(slices) {
     const periods = this._getPeriods(slices);
 
-    this.setState({
-      selected: {
-        taskId: null,
-        periods: periods,
-        taskName: null,
-        projectId: null,
-        tagIds: [],
-      },
-    });
+    if (this.state.selected.taskId !== null) {
+      this.setState({
+        selected: {
+          taskId: null,
+          periods: periods,
+          taskName: null,
+          projectId: null,
+          tagIds: [],
+        },
+      });
+    } else {
+      this.setState((prevState, props) => ({
+        selected: {
+          taskId: prevState.selected.taskId,
+          periods: periods,
+          taskName: prevState.selected.taskName,
+          projectId: prevState.selected.projectId,
+          tagIds: prevState.selected.tagIds,
+        },
+      }));
+    }
   }
 
   /**
@@ -321,6 +335,23 @@ class TimeTable extends Component {
         tagIds: task.tagIds,
       },
     });
+  }
+
+  /**
+   * @param {string} taskName
+   * @param {number} projectId
+   * @param {Array<number>} tagIds
+   */
+  onChangeTaskData(taskName, projectId, tagIds) {
+    this.setState((prevState, props) => ({
+      selected: {
+        taskId: prevState.selected.taskId,
+        periods: prevState.selected.periods,
+        taskName: taskName,
+        projectId: projectId,
+        tagIds: tagIds,
+      },
+    }));
   }
 
   /**

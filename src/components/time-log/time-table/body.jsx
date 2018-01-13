@@ -100,13 +100,13 @@ class Body extends Component {
     const taskLoopSteps = 120;
     const mockedTasks = new Array(taskLoopSteps);
     for (let i = 0; i < 24; ++i) {
-      mockedTasks[i] = {taskId: 1, styleId: 0};
+      mockedTasks[i] = {taskId: 1, styleId: 1};
     }
     for (let i = 24; i < 54; ++i) {
-      mockedTasks[i] = {taskId: 2, styleId: 7};
+      mockedTasks[i] = {taskId: 2, styleId: 8};
     }
     for (let i = 54; i < 84; ++i) {
-      mockedTasks[i] = {taskId: 3, styleId: 14};
+      mockedTasks[i] = {taskId: 3, styleId: 15};
     }
     for (let i = 84; i < 120; ++i) {
       mockedTasks[i] = {taskId: null, styleId: null};
