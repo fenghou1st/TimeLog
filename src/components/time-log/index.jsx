@@ -17,8 +17,19 @@ class TimeLog extends Component {
     super(props);
 
     this.state = {
-      menu: {selected: 'log'},
+      menu: {
+        selected: 'log',
+        isCompact: false,
+        isCompactEdited: false,
+      },
+      timeTable: {
+        shouldUpdateDimensions: false,
+      },
     };
+
+    this.COMPACT_MODE_WIDTH_THRESHOLD = 1024;
+
+    this._updateDimensions = this._updateDimensions.bind(this);
   }
 
   /**
@@ -27,14 +38,102 @@ class TimeLog extends Component {
   render() {
     return (
         <div className={styles.frame}>
-          <Menu title={this.props.title} selected={this.state.menu.selected} />
+          <Menu title={this.props.title}
+                data={this.state.menu}
+                onSelectItem={this.onSelectItem.bind(this)}
+                onEditCompact={() => this.onEditCompact()}
+          />
           <div className={styles.content}>
-            <TimeTable />
+            <TimeTable
+                shouldUpdateDimensions={
+                  this.state.timeTable.shouldUpdateDimensions}
+                dimensionsUpdated={
+                  () => this.timeTableDimensionsUpdated()}
+            />
           </div>
         </div>
     );
   }
+
+  /**
+   * Add event listener
+   */
+  componentDidMount() {
+    this._updateDimensions();
+    window.addEventListener('resize', this._updateDimensions);
+  }
+
+  /**
+   * Remove event listener
+   */
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._updateDimensions);
+  }
+
+  /**
+   * On select menu item
+   * @param {string} item
+   */
+  onSelectItem(item) {
+    this.setState((prevState, props) => ({
+      menu: {
+        selected: item,
+        isCompact: prevState.menu.isCompact,
+        isCompactEdited: prevState.menu.isCompactEdited,
+      },
+    }));
+  }
+
+  /**
+   * On edit compact status
+   */
+  onEditCompact() {
+    this.setState((prevState, props) => ({
+      menu: {
+        selected: prevState.menu.selected,
+        isCompact: !prevState.menu.isCompact,
+        isCompactEdited: true,
+      },
+      timeTable: {
+        shouldUpdateDimensions: true,
+      },
+    }));
+  }
+
+  /**
+   * Time-table's dimensions updated
+   */
+  timeTableDimensionsUpdated() {
+    this.setState({
+      timeTable: {
+        shouldUpdateDimensions: false,
+      },
+    });
+  }
+
+  /**
+   * Update dimensions
+   * @private
+   */
+  _updateDimensions() {
+    const isCompact = window.innerWidth < this.COMPACT_MODE_WIDTH_THRESHOLD;
+
+    if (isCompact !== this.state.menu.isCompact &&
+        !this.state.menu.isCompactEdited) {
+      this.setState((prevState, props) => ({
+        menu: {
+          selected: prevState.menu.selected,
+          isCompact: isCompact,
+          isCompactEdited: prevState.menu.isCompactEdited,
+        },
+        timeTable: {
+          shouldUpdateDimensions: true,
+        },
+      }));
+    }
+  }
 }
+
 TimeLog.propTypes = {
   title: PropTypes.string.isRequired,
 };

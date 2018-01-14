@@ -6,6 +6,7 @@ import {Body} from './body.jsx';
 import {Ruler} from './ruler.jsx';
 import {Task} from './task.jsx';
 import styles from './index.scss';
+import PropTypes from 'prop-types';
 
 // const language = loadConfig().language;
 // const transData = require(`./translations.${language}.yml`);
@@ -108,11 +109,14 @@ class TimeTable extends Component {
   }
 
   /**
-   * TODO: remove
-   * Test only
+   * Update dimensions if possible
    */
   componentDidUpdate() {
     console.info('Time-table re-rendered');
+
+    if (this.props.shouldUpdateDimensions) {
+      this._updateDimensions();
+    }
   }
 
   /**
@@ -148,10 +152,6 @@ class TimeTable extends Component {
    * @private
    */
   _updateDimensions() {
-    if (window.innerWidth < 800) {
-      // TODO: fold menu
-    }
-
     const parentWidth = this.rootNode.parentElement.clientWidth;
 
     let style = window.getComputedStyle(this.rootNode, null);
@@ -174,6 +174,8 @@ class TimeTable extends Component {
         this.state.dimensions.sliceGapH !== sliceGapH) {
       this.setState({dimensions: {tableWidth, sliceWidth, sliceGapH}});
     }
+
+    this.props.dimensionsUpdated();
   }
 
   /**
@@ -439,5 +441,10 @@ class TimeTable extends Component {
     return periods;
   }
 }
+
+TimeTable.propTypes = {
+  shouldUpdateDimensions: PropTypes.bool.isRequired,
+  dimensionsUpdated: PropTypes.func.isRequired,
+};
 
 export {TimeTable};

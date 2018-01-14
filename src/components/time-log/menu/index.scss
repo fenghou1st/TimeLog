@@ -1,12 +1,17 @@
 @import '../common';
 
-$menu-padding-horizontal: 0.5em;
+$menu-width: 10em;
+$menu-item-icon-width: 1.3em;
+$menu-item-icon-H-padding: 0.5em;
+$menu-width-compact: $menu-item-icon-width + $menu-item-icon-H-padding * 2;
+$menu-logo-width: 2em;
+$menu-logo-H-padding: ($menu-width-compact - $menu-logo-width) / 2;
 
 .menu {
-  position: absolute;
-  width: $menu-width - $menu-padding-horizontal * 2;
+  flex: 0 0 auto;
+  width: $menu-width;
   height: 100%;
-  padding: 0.5em $menu-padding-horizontal;
+  padding: 0 0.5em;
   overflow: hidden;
   color: $color-menu-fg;
   background-color: $color-menu-bg;
@@ -17,8 +22,9 @@ $menu-padding-horizontal: 0.5em;
     cursor: pointer;
 
     img {
-      width: 2em;
+      width: $menu-logo-width;
       height: 2em;
+      margin-left: $menu-logo-H-padding;
       vertical-align: middle;
     }
 
@@ -35,13 +41,14 @@ $menu-padding-horizontal: 0.5em;
     height: 2.5em;
     line-height: 2.5em;
     margin: 0.25em 0;
-    padding: 0 0.5em;
+    padding: 0 $menu-item-icon-H-padding;
     border-radius: 0.5em;
     font-size: 0.9375em;
     cursor: pointer;
 
     .icon {
-      width: 1em;
+      width: $menu-item-icon-width;
+      text-align: center;
       font-size: 1.333333333em;
       vertical-align: middle;
     }
@@ -58,4 +65,7 @@ $menu-padding-horizontal: 0.5em;
     color: $color-menu-fg-highlighted;
     background-color: $color-menu-bg-highlighted;
   }
+}
+.menu.compact {
+  width: $menu-width-compact;
 }

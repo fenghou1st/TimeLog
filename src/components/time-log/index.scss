@@ -1,6 +1,7 @@
 @import './common';
 
 .frame {
+  display: flex;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -9,11 +10,8 @@
   background-color: $color-frame-bg;
 
   .content {
-    position: absolute;
-    left: $menu-width;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    flex: 1 1 auto;
+    height: 100%;
     overflow: hidden;
   }
 }
