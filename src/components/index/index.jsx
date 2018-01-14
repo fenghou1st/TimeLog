@@ -3,11 +3,12 @@ import 'babel-polyfill';
 import React, {Component} from 'react';
 import {render} from 'react-dom';
 
+import {loadConfig} from 'src/base/js/config';
 import {TimeLog} from 'src/components/time-log/index.jsx';
 
 import styles from './index.scss';
 
-const language = 'en';
+const language = loadConfig().language;
 const transData = require(`./translations.${language}.yml`);
 
 // Definitions /////////////////////////////////////////////////////////////////

@@ -1,0 +1,57 @@
+@import '../common';
+
+.overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+
+  outline: none;
+  box-shadow: 0 0 2px 2px $color-modal-bg;
+  padding: 1em;
+  background: $color-modal-bg;
+  border-radius: 0.25em;
+
+  .search {
+    display: flex;
+    align-items: center;
+    height: 2.5em;
+    border-radius: 0.25em;
+    padding: 0 1em;
+    background-color: $color-input-bg;
+
+    .icon {
+      flex: 0 0 auto;
+      font-size: 1.25em;
+      color: $color-text-p4;
+    }
+
+    .input {
+      flex: 1 1 auto;
+      margin-left: 1em;
+      border: 0;
+      font-size: 1em;
+      color: $color-text-p3;
+      background-color: $color-input-bg;
+    }
+    .input::placeholder {
+      color: $color-text-p4;
+    }
+  }
+
+  .list {
+    margin-top: 1em;
+    width: 40em;
+    height: 20em;
+  }
+}

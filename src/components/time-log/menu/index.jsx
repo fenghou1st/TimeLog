@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import faStyles from 'font-awesome/css/font-awesome.css';
 
+import {loadConfig} from 'src/base/js/config';
 import styles from './index.scss';
 import logo from './logo.png';
 
 const boundClassNames = classNames.bind(styles);
 
-const language = 'en';
+const language = loadConfig().language;
 const transData = require(`./translations.${language}.yml`);
 
 /**

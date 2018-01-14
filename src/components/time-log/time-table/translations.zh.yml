@@ -2,4 +2,4 @@ task:
   name:
     placeholder:              请描述该任务
   projectName:
-    placeholder:              请选择工程
+    placeholder:              未指定工程

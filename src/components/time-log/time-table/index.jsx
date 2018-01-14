@@ -7,7 +7,7 @@ import {Ruler} from './ruler.jsx';
 import {Task} from './task.jsx';
 import styles from './index.scss';
 
-// const language = 'en';
+// const language = loadConfig().language;
 // const transData = require(`./translations.${language}.yml`);
 
 /**
@@ -99,6 +99,7 @@ class TimeTable extends Component {
             <Task data={this.state.selected}
                   projects={this.state.projects}
                   tags={this.state.tags}
+                  rootNode={this.rootNode}
                   onChangeData={this.onChangeTaskData}
             />
           }
@@ -255,7 +256,7 @@ class TimeTable extends Component {
         end: 1514037000000, // 2017-12-23 21:50:00 +0800
         name: 'test task 003 test task 003 test task 003 test task 003',
         projectId: 3,
-        tagIds: [1, 2, 3, 4, 5],
+        tagIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       }],
     ]);
   }
@@ -270,6 +271,24 @@ class TimeTable extends Component {
       [1, {name: 'test project 001', tagIds: [1, 2, 3]}],
       [2, {name: 'test project 002', tagIds: [2, 3, 4]}],
       [3, {name: 'test project 003', tagIds: [3, 4, 5]}],
+      [4, {name: 'test project 004', tagIds: [4]}],
+      [5, {name: 'test project 005', tagIds: [5]}],
+      [6, {name: 'test project 006', tagIds: [6]}],
+      [7, {name: 'test project 007', tagIds: [7]}],
+      [8, {name: 'test project 008', tagIds: [8]}],
+      [9, {name: 'test project 009', tagIds: [9]}],
+      [10, {name: 'test project 010', tagIds: [10]}],
+      [11, {name: 'test project 011', tagIds: [11]}],
+      [12, {name: 'test project 012', tagIds: [12]}],
+      [13, {name: 'test project 013', tagIds: [13]}],
+      [14, {name: 'test project 014', tagIds: [14]}],
+      [15, {name: 'test project 015', tagIds: [15]}],
+      [16, {name: 'test project 016', tagIds: [16]}],
+      [17, {name: 'test project 017', tagIds: [17]}],
+      [18, {name: 'test project 018', tagIds: [18]}],
+      [19, {name: 'test project 019', tagIds: [19]}],
+      [20, {name: 'test project 020', tagIds: [20]}],
+      [21, {name: 'test project 021', tagIds: [21]}],
     ]);
   }
 
@@ -285,6 +304,22 @@ class TimeTable extends Component {
       [3, {name: 'test tag 003', styleId: 3}],
       [4, {name: 'test tag 004', styleId: 4}],
       [5, {name: 'test tag 005', styleId: 5}],
+      [6, {name: 'test tag 006', styleId: 6}],
+      [7, {name: 'test tag 007', styleId: 7}],
+      [8, {name: 'test tag 008', styleId: 8}],
+      [9, {name: 'test tag 009', styleId: 9}],
+      [10, {name: 'test tag 010', styleId: 10}],
+      [11, {name: 'test tag 011', styleId: 11}],
+      [12, {name: 'test tag 012', styleId: 12}],
+      [13, {name: 'test tag 013', styleId: 13}],
+      [14, {name: 'test tag 014', styleId: 14}],
+      [15, {name: 'test tag 015', styleId: 15}],
+      [16, {name: 'test tag 016', styleId: 16}],
+      [17, {name: 'test tag 017', styleId: 17}],
+      [18, {name: 'test tag 018', styleId: 18}],
+      [19, {name: 'test tag 019', styleId: 19}],
+      [20, {name: 'test tag 020', styleId: 20}],
+      [21, {name: 'test tag 021', styleId: 21}],
     ]);
   }
 

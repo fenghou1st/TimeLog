@@ -78,7 +78,17 @@
       border-radius: 0.2em;
       color: $color-text-p3;
       background-color: $color-task-project-bg;
-      cursor: pointer;
+
+      span {
+        cursor: pointer;
+      }
+
+      .remove {
+        margin-left: 0.5em;
+        font-size: 0.875em;
+        color: $color-task-project-remove-fg;
+        cursor: pointer;
+      }
     }
   }
 
@@ -97,6 +107,7 @@
       flex-flow: row wrap;
       align-items: center;
       flex: 1 1 auto;
+      font-size: 0.875em;
 
       .name {
         position: relative;
@@ -109,13 +120,15 @@
 
         .remove {
           margin-left: 0.5em;
+          font-size: 0.875em;
+          color: $color-task-tag-remove-fg;
           cursor: pointer;
         }
       }
 
       @for $i from 1 through length($colors-item-basic) {
         .name.style-#{$i} {
-          background-color: (nth($colors-item-basic, $i) + 3 * $color-task-tag-bg) / 4;
+          background-color: (nth($colors-item-basic, $i) + 4 * $color-task-tag-bg) / 5;
         }
       }
 

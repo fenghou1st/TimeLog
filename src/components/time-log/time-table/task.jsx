@@ -6,11 +6,13 @@ import ReactTooltip from 'react-tooltip';
 import FontAwesome from 'react-fontawesome';
 import faStyles from 'font-awesome/css/font-awesome.css';
 
+import {loadConfig} from 'src/base/js/config';
+import {ProjectSelector} from 'src/components/time-log/project/selector.jsx';
 import styles from './task.scss';
 
 const boundClassNames = classNames.bind(styles);
 
-const language = 'en';
+const language = loadConfig().language;
 const transData = require(`./translations.${language}.yml`);
 
 /**
@@ -23,12 +25,15 @@ class Task extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      openedModal: null,
+    };
+
     this.DATE_FORMAT = 'MM-DD';
     this.TIME_FORMAT = 'HH:mm';
 
-    this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeProject = this.onChangeProject.bind(this);
-    this.onAddTag = this.onAddTag.bind(this);
+    this.MODAL_PROJECT_SELECTOR = 'ProjectSelector';
+    this.MODAL_TAG_SELECTOR = 'TagSelector';
   }
 
   /**
@@ -44,11 +49,17 @@ class Task extends Component {
                    value={this.props.data.taskName || ''}
                    placeholder={transData.task.name.placeholder}
                    autoFocus={true}
-                   onChange={this.onChangeName}
+                   onChange={(ev) => this.onChangeName(ev)}
             />
           </div>
           {this._renderProject()}
           {this._renderTags()}
+
+          <ProjectSelector
+              isOpen={this.state.openedModal === this.MODAL_PROJECT_SELECTOR}
+              onClose={this.onProjectSelectorClose.bind(this)}
+              getParent={() => this.getModalParent()}
+          />
         </div>
     );
   }
@@ -118,22 +129,31 @@ class Task extends Component {
    * @private
    */
   _renderProject() {
-    let projectName = transData.task.projectName.placeholder;
-
+    let projectName = null;
     if (this.props.data.projectId !== null) {
       const project = this.props.projects.get(this.props.data.projectId);
       projectName = project.name;
     }
+
+    const placeholder = transData.task.projectName.placeholder;
 
     return (
         <div className={styles.project}>
           <FontAwesome className={styles.icon}
                        name='cube'
                        cssModule={faStyles}/>
-          <div className={styles.name}
-               onClick={this.onChangeProject}
-          >
-            {projectName}
+          <div className={styles.name}>
+            <span onClick={() => this.onChangeProject()}>
+              {projectName !== null ? projectName : placeholder}
+            </span>
+            {
+              projectName !== null &&
+              <FontAwesome className={styles.remove}
+                           name='remove'
+                           cssModule={faStyles}
+                           onClick={() => this.onRemoveProject()}
+              />
+            }
           </div>
         </div>
     );
@@ -188,7 +208,7 @@ class Task extends Component {
             <FontAwesome className={styles.add}
                          name='plus'
                          cssModule={faStyles}
-                         onClick={this.onAddTag}
+                         onClick={() => this.onAddTag()}
             />
           </div>
         </div>
@@ -196,11 +216,39 @@ class Task extends Component {
   }
 
   /**
-   * TODO: implement
+   * Get modal's parent node
+   * @return {Element}
+   */
+  getModalParent() {
+    return this.props.rootNode.parentElement;
+  }
+
+  /**
    * On change project
    */
   onChangeProject() {
-    console.log('Change project');
+    this.setState({openedModal: this.MODAL_PROJECT_SELECTOR});
+  }
+
+  /**
+   * On close project selector
+   * @param {?number} projectId
+   */
+  onProjectSelectorClose(projectId) {
+    this.setState({openedModal: null});
+
+    if (projectId !== null) {
+      this.props.onChangeData(
+          this.props.data.taskName, projectId, this.props.data.tagIds);
+    }
+  }
+
+  /**
+   * TODO: implement
+   * On remove project
+   */
+  onRemoveProject() {
+    console.log('Remove project');
   }
 
   /**
@@ -221,11 +269,11 @@ class Task extends Component {
   }
 
   /**
-   * @param {Event} event
+   * @param {SyntheticEvent} ev
    */
-  onChangeName(event) {
+  onChangeName(ev) {
     this.props.onChangeData(
-        event.target.value, this.props.data.projectId, this.props.data.tagIds);
+        ev.target.value, this.props.data.projectId, this.props.data.tagIds);
   }
 }
 
@@ -233,6 +281,7 @@ Task.propTypes = {
   data: PropTypes.object.isRequired,
   projects: PropTypes.instanceOf(Map).isRequired,
   tags: PropTypes.instanceOf(Map).isRequired,
+  rootNode: PropTypes.instanceOf(Element).isRequired,
   onChangeData: PropTypes.func.isRequired,
 };
 
