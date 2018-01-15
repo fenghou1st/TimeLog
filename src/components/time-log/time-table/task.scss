@@ -1,5 +1,7 @@
 @import './index';
 
+$row-icon-width: 1.3em;
+
 .task {
   margin-top: 1em;
   padding: 0.5em;
@@ -12,9 +14,15 @@
     align-items: center;
     height: 2.5em;
 
+    .icon {
+      flex: 0 0 auto;
+      width: $row-icon-width;
+      text-align: center;
+    }
+
     .period {
       flex: 0 0 auto;
-      margin-right: 0.5em;
+      margin-left: 1em;
       cursor: default;
 
       .timeBegin {
@@ -38,7 +46,7 @@
 
     .ellipsis {
       flex: 0 0 auto;
-      margin-right: 0.5em;
+      margin-left: 1em;
       cursor: default;
     }
 
@@ -69,6 +77,8 @@
 
     .icon {
       flex: 0 0 auto;
+      width: $row-icon-width;
+      text-align: center;
     }
 
     .name {
@@ -100,6 +110,8 @@
 
     .icon {
       flex: 0 0 auto;
+      width: $row-icon-width;
+      text-align: center;
     }
 
     .tags {

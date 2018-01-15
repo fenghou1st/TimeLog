@@ -43,6 +43,10 @@ class Task extends Component {
     return (
         <div className={styles.task}>
           <div className={styles.periodsAndName}>
+            <FontAwesome className={styles.icon}
+                         name='clock-o'
+                         cssModule={faStyles}
+            />
             {this._renderPeriods()}
             <input className={styles.name}
                    type='text'
@@ -141,7 +145,8 @@ class Task extends Component {
         <div className={styles.project}>
           <FontAwesome className={styles.icon}
                        name='cube'
-                       cssModule={faStyles}/>
+                       cssModule={faStyles}
+          />
           <div className={styles.name}>
             <span onClick={() => this.onChangeProject()}>
               {projectName !== null ? projectName : placeholder}
